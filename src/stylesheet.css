@@ -1,0 +1,17 @@
+body {
+  font-family: arial;
+}
+
+table.stats-table {
+  width: 35em;
+}
+
+.stats-table td {
+    padding: 10px 10px 0px 10px;
+    text-align: right;
+    font-weight: bold;
+}
+
+td.stat-name    {width: 37%;}
+td.stat-number  {width: 3%; }
+td.stat-bar     {width: 60%;}
