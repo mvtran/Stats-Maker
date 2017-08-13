@@ -1,17 +1,25 @@
 body {
-  font-family: arial;
+  font-family: arial, calibri;
 }
 
 table.stats-table {
-  width: 35em;
+  width: 37em;
 }
 
 .stats-table td {
     padding: 10px 10px 0px 10px;
     text-align: right;
     font-weight: bold;
+    white-space: nowrap;
 }
 
-td.stat-name    {width: 37%;}
-td.stat-number  {width: 3%; }
-td.stat-bar     {width: 60%;}
+td.stat-bar {
+  width: 60%;
+}
+
+.fake-link {
+  font-size: 0.75em;
+  cursor: pointer;
+  color: blue;
+  text-decoration: underline;
+}

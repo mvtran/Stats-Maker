@@ -38,13 +38,26 @@ class PokemonStats extends React.Component {
     );
   }
 
+  renderOptions(statName, pos) {
+    return (
+      <div>
+        <span className="fake-link" onClick={(e) => this.props.removeStat(statName, e)}>
+          [X]
+        </span>
+      </div>
+    );
+  }
+
   render() {
     const stats = this.props.stats;
     const inputValues = this.props.inputValues;
-    const statbars = Object.keys(stats).map((stat, i) => {
+    const statbars = Object.keys(stats).map((stat, idx) => {
       return (
-        <tr key={i}>
-          <td>
+        <tr key={idx}>
+          <td className="stat-options">
+            {this.renderOptions(stat, idx)}
+          </td>
+          <td className="stat-input">
             {this.renderInputField(stat, inputValues[stat], this.props.statMax)}
           </td>
           <td className="stat-name">
@@ -66,6 +79,7 @@ class PokemonStats extends React.Component {
           {statbars}
           <tr>
             <td></td>
+            <td><button onClick={() => this.props.onReset()}>Reset</button></td>
             <td>BST: </td>
             <td>{getBST(stats)}</td>
           </tr>
@@ -104,8 +118,49 @@ class PokemonProfile extends React.Component {
     };
   }
 
+  addStat(pos, e) {
+    console.log("adding below position " + pos);
+  }
+
+  removeStat(statKey, e) {
+    if (Object.keys(this.state.stats).length > 1) {
+      var updatedStats = {...this.state.stats};
+      delete updatedStats[statKey];
+
+      var updatedInputs = {...this.state.inputValues};
+      delete updatedInputs[statKey];
+
+      this.setState({...this.state, inputValues: updatedInputs, stats: updatedStats});
+    }
+  }
+
+  renameStat(statKey, e) {
+
+  }
+
+  reset() {
+    this.setState({...this.state,
+      inputValues: {
+        "HP": 50,
+        "Attack": 50,
+        "Defense": 50,
+        "Special Attack": 50,
+        "Special Defense": 50,
+        "Speed": 50,
+      },
+      stats: {
+        "HP": 50,
+        "Attack": 50,
+        "Defense": 50,
+        "Special Attack": 50,
+        "Special Defense": 50,
+        "Speed": 50,
+      },
+    });
+  }
+
   // change the stat given the value from the input box
-  onBlur(statKey, e) {
+  handleBlur(statKey, e) {
     var newValue = e.target.value;
     if (newValue < 1) {
       newValue = 1;
@@ -123,7 +178,7 @@ class PokemonProfile extends React.Component {
   }
 
   // update what's in the input field without changing the actual stat
-  onChange(statKey, e) {
+  handleChange(statKey, e) {
     var updatedInputs = {...this.state.inputValues};
     updatedInputs[statKey] = parseInt(e.target.value, 10);
     this.setState({...this.state, inputValues: updatedInputs});
@@ -135,8 +190,11 @@ class PokemonProfile extends React.Component {
         stats = {this.state.stats}
         statMax = {this.state.statMax}
         inputValues = {this.state.inputValues}
-        onChange = {(statKey, e) => this.onChange(statKey, e)}
-        onBlur = {(statKey, e) => this.onBlur(statKey, e)}
+        onChange = {(statKey, e) => this.handleChange(statKey, e)}
+        onBlur = {(statKey, e) => this.handleBlur(statKey, e)}
+        addStat = {(pos, e) => this.addStat(pos, e)}
+        removeStat = {(statKey, e) => this.removeStat(statKey, e)}
+        onReset = {() => this.reset()}
       />
     );
   }
@@ -144,12 +202,15 @@ class PokemonProfile extends React.Component {
 
 // class that stores multiple profiles?
 
+//====================================================
+
 ReactDOM.render(
   <PokemonProfile />,
   document.getElementById('root')
 );
 
 function getBST(stats) {
+
   var statValues = Object.values(stats);
   return statValues.reduce((a,b) => a+b);
 }
